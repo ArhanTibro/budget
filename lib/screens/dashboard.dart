@@ -13,8 +13,8 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   int currentIndex = 0;
   var pageViewList = [
-    HomeScreen(),
-    Transactionscreen(),
+    const HomeScreen(),
+    const Transactionscreen(),
   ];
 
   @override

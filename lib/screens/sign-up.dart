@@ -141,7 +141,7 @@ class _SignupViewState extends State<SignupView> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginView()),
+                          MaterialPageRoute(builder: (context) => const LoginView()),
                         );
                       },
                       child: const Text(
