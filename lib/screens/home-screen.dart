@@ -1,4 +1,5 @@
 import 'package:budget/screens/login-screen.dart';
+import 'package:budget/widgets/add-transaction-form.dart';
 import 'package:budget/widgets/hero-card.dart';
 import 'package:budget/widgets/transactions-cards.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,9 +25,29 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  _dialogBuilder(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: AddTransactionForm(),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue.shade900,
+          onPressed: () {
+            _dialogBuilder(context);
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
         appBar: AppBar(
           backgroundColor: Colors.blue.shade900,
           title: const Text(

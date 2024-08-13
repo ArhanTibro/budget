@@ -35,6 +35,11 @@ class AppIcons {
       "name": "Household Items",
       "icon": FontAwesomeIcons.broom,
     },
+    {
+      "name": "Others",
+      "icon":
+          FontAwesomeIcons.cartPlus, // or any icon that you find appropriate
+    },
   ];
   IconData getExpenseCategortIcons(String categoryName) {
     final category = homeExpensesCategories.firstWhere(

@@ -12,7 +12,7 @@ class TransactionsCard extends StatelessWidget {
       padding: const EdgeInsets.all(15),
       child: Column(
         children: [
-          Row(
+          const Row(
             children: [
               Text(
                 'Recent Transactions',
@@ -23,7 +23,7 @@ class TransactionsCard extends StatelessWidget {
           ListView.builder(
               shrinkWrap: true,
               itemCount: 4,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -33,7 +33,7 @@ class TransactionsCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                              offset: Offset(0, 10),
+                              offset: const Offset(0, 10),
                               color: Colors.grey.withOpacity(0.09),
                               blurRadius: 10,
                               spreadRadius: 4)
@@ -41,8 +41,8 @@ class TransactionsCard extends StatelessWidget {
                     child: ListTile(
                       minVerticalPadding: 10,
                       contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                      leading: Container(
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      leading: SizedBox(
                         width: 50,
                         height: 50,
                         child: Container(
@@ -56,7 +56,7 @@ class TransactionsCard extends StatelessWidget {
                                   appIcons.getExpenseCategortIcons('home'))),
                         ),
                       ),
-                      title: Row(
+                      title: const Row(
                         children: [
                           Expanded(child: Text('Car Rent August 2024')),
                           Text(
@@ -65,7 +65,7 @@ class TransactionsCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      subtitle: Column(
+                      subtitle: const Column(
                         children: [
                           Row(
                             children: [
