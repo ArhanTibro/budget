@@ -1,7 +1,8 @@
 import 'package:budget/utils/appValodator.dart';
 import 'package:budget/widgets/category-dropdown.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:uuid/uuid.dart';
 
 class AddTransactionForm extends StatefulWidget {
   const AddTransactionForm({super.key});
@@ -17,11 +18,17 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var isLoader = false;
   var appValidator = AppValidator();
+  var amountEditController = TextEditingController();
+  var titleEditController = TextEditingController();
+  var uid = Uuid();
+
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoader = true;
       });
+      final user = FirebaseAuth.instance.currentUser;
+      int timeStamp = DateTime.now().microsecondsSinceEpoch;
       // var data = {
       //   "email": _emailController.text,
       //   "password": _passwordController.text,
@@ -45,13 +52,17 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextFormField(
+              controller: titleEditController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: appValidator.isEmptyCheck,
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
             TextFormField(
+              controller: amountEditController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: appValidator.isEmptyCheck,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Amount'),
+              decoration: const InputDecoration(labelText: 'Amount'),
             ),
             CategoryDropDown(
                 cattype: category,
@@ -64,14 +75,14 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                 }),
             DropdownButtonFormField(
                 value: "credit",
-                items: [
+                items: const [
                   DropdownMenuItem(
-                    child: Text('Credit'),
                     value: 'credit',
+                    child: Text('Credit'),
                   ),
                   DropdownMenuItem(
-                    child: Text('Debit'),
                     value: 'debit',
+                    child: Text('Debit'),
                   ),
                 ],
                 onChanged: (value) {
@@ -86,9 +97,13 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  _submitForm();
+                  if (isLoader == false) {
+                    _submitForm();
+                  }
                 },
-                child: const Text('Add Transaction'))
+                child: isLoader
+                    ? Center(child: CircularProgressIndicator())
+                    : const Text('Add Transaction'))
           ],
         ),
       ),

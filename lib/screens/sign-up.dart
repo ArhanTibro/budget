@@ -1,6 +1,9 @@
+import 'package:budget/screens/dashboard.dart';
 import 'package:budget/screens/login-screen.dart';
 import 'package:budget/services/auth-service.dart';
 import 'package:budget/utils/appValodator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignupView extends StatefulWidget {
@@ -29,20 +32,56 @@ class _SignupViewState extends State<SignupView> {
       setState(() {
         isLoader = true;
       });
-      var data = {
-        "username": _userNameController.text,
-        "email": _emailController.text,
-        "password": _passwordController.text,
-        "phone": _phoneController.text
-      };
 
-      await authService.createUser(data, context);
+      try {
+        // Create user with email and password in Firebase Authentication
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
 
-      setState(() {
-        isLoader = false;
-      });
-      // ScaffoldMessenger.of(_formKey.currentContext!).showSnackBar(
-      //     const SnackBar(content: Text('Form submitted successfully')));
+        // Get the current user's ID from the authentication process
+        String userId = userCredential.user!.uid;
+
+        // Prepare the user data
+        var data = {
+          "username": _userNameController.text,
+          "email": _emailController.text,
+          "phone": _phoneController.text,
+          "renainingAmount": 0,
+          "totalCredit": 0,
+          "totalDebit": 0
+        };
+
+        // Create a new document in the 'users' collection with the userId as the document ID
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .set(data);
+
+        setState(() {
+          isLoader = false;
+        });
+
+        // Optionally, show a success message or navigate to another page
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign-up successful')),
+        );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((context) => const DashBoard())),
+        );
+        // Navigate to HomeScreen or another page if needed
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      } catch (e) {
+        setState(() {
+          isLoader = false;
+        });
+        // Handle errors here, such as showing a message to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString()}')),
+        );
+      }
     }
   }
 
@@ -141,7 +180,8 @@ class _SignupViewState extends State<SignupView> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginView()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginView()),
                         );
                       },
                       child: const Text(

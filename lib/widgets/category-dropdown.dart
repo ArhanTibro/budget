@@ -1,7 +1,5 @@
 import 'package:budget/utils/icons-list.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CategoryDropDown extends StatelessWidget {
   CategoryDropDown({super.key, this.cattype, required this.onChanged});
@@ -29,7 +27,7 @@ class CategoryDropDown extends StatelessWidget {
                     ),
                     Text(
                       e['name'],
-                      style: TextStyle(color: Colors.black45),
+                      style: const TextStyle(color: Colors.black45),
                     ),
                   ],
                 )))

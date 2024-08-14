@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
   var isLogoutLoading = false;
 
   logOut() async {
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
+          return const AlertDialog(
             content: AddTransactionForm(),
           );
         });
@@ -57,9 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginView()),
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => const LoginView()),
+                  // );
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: ((context) => const LoginView())),
                   );
                 },
                 icon: isLogoutLoading
@@ -72,7 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Column(
           children: [
-            const HeroCard(), // This will stay fixed at the top
+            HeroCard(
+              userId: userId,
+            ), // This will stay fixed at the top
             Expanded(
               child: SingleChildScrollView(
                 child: TransactionsCard(), // This will be scrollable

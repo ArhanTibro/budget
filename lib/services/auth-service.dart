@@ -1,17 +1,19 @@
 import 'package:budget/screens/dashboard.dart';
+import 'package:budget/services/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {
+  var db = Db();
   createUser(data, context) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: data['email'],
         password: data['password'],
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashBoard()),
+      await db.addUser(data, context);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: ((context) => const DashBoard())),
       );
     } catch (e) {
       showDialog(
@@ -31,16 +33,15 @@ class AuthService {
         email: data['email'],
         password: data['password'],
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashBoard()),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: ((context) => const DashBoard())),
       );
     } catch (e) {
       showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Sign up Failed'),
+              title: const Text('Login Failed'),
               content: Text(e.toString()),
             );
           });
