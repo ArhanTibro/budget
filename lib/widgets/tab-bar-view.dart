@@ -1,7 +1,11 @@
+import 'package:budget/widgets/transaction-list.dart';
 import 'package:flutter/material.dart';
 
 class TypeTabBar extends StatelessWidget {
-  const TypeTabBar({super.key});
+  const TypeTabBar(
+      {super.key, required this.category, required this.monthyear});
+  final String category;
+  final String monthyear;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +24,16 @@ class TypeTabBar extends StatelessWidget {
                 ]),
                 Expanded(
                     child: TabBarView(children: [
-                  Center(
-                    child: Text('Credit'),
+                  TransactionList(
+                    category: category,
+                    monthyear: monthyear,
+                    type: 'credit',
                   ),
-                  Center(
-                    child: Text('Dredit'),
-                  )
+                  TransactionList(
+                    category: category,
+                    monthyear: monthyear,
+                    type: 'debit',
+                  ),
                 ]))
               ],
             )));
