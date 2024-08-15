@@ -1,13 +1,10 @@
-import 'package:budget/utils/icons-list.dart';
 import 'package:budget/widgets/transaction-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TransactionsCard extends StatelessWidget {
-  TransactionsCard({super.key});
+  const TransactionsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +39,8 @@ class RecentTransactionsList extends StatelessWidget {
           .collection('users')
           .doc(userId)
           .collection("transactions")
+          .orderBy('timeStamp', descending: true)
+          .limit(20)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {

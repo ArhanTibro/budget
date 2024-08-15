@@ -41,18 +41,25 @@ class TransactionCard extends StatelessWidget {
               width: 30,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Colors.green.withOpacity(0.2)),
+                  color: data['type'] == 'credit'
+                      ? Colors.green.withOpacity(0.2)
+                      : Colors.red.withOpacity(0.2)),
               child: Center(
                   child: FaIcon(
-                      appIcons.getExpenseCategortIcons('${data['category']}'))),
+                      appIcons.getExpenseCategortIcons('${data['category']}'),
+                      color: data['type'] == 'credit'
+                          ? Colors.green.withOpacity(0.2)
+                          : Colors.red.withOpacity(0.2))),
             ),
           ),
           title: Row(
             children: [
-              Expanded(child: Text('Car Rent August 2024')),
+              Expanded(child: Text('${data['title']}')),
               Text(
-                '${data['amount']}',
-                style: TextStyle(color: Colors.green),
+                "${data['type'] == 'credit' ? '+ ' : '- '}${data['amount']}",
+                style: TextStyle(
+                    color:
+                        data['type'] == 'credit' ? Colors.green : Colors.red),
               ),
             ],
           ),
@@ -64,16 +71,16 @@ class TransactionCard extends StatelessWidget {
                     'Balance',
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     '${data['remainingAmount']}',
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                 ],
               ),
               Text(
                 formateDate,
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey),
               )
             ],
           ),

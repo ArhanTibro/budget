@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             HeroCard(
               userId: userId,
             ), // This will stay fixed at the top
-            Expanded(
+            const Expanded(
               child: SingleChildScrollView(
                 child: TransactionsCard(), // This will be scrollable
               ),
