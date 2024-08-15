@@ -49,7 +49,7 @@ class _SignupViewState extends State<SignupView> {
           "username": _userNameController.text,
           "email": _emailController.text,
           "phone": _phoneController.text,
-          "renainingAmount": 0,
+          "remainingAmount": 0,
           "totalCredit": 0,
           "totalDebit": 0
         };

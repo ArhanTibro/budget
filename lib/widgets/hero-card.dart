@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HeroCard extends StatelessWidget {
-  HeroCard({
+  const HeroCard({
     super.key,
     required this.userId,
   });
@@ -12,15 +12,15 @@ class HeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     print("User ID: $userId");
 
-    final Stream<DocumentSnapshot> _usersStream =
+    final Stream<DocumentSnapshot> usersStream =
         FirebaseFirestore.instance.collection('users').doc(userId).snapshots();
 
     return StreamBuilder<DocumentSnapshot>(
-      stream: _usersStream,
+      stream: usersStream,
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {
@@ -67,7 +67,7 @@ class Cards extends StatelessWidget {
                       height: 1.2),
                 ),
                 Text(
-                  "${data['renainingAmount']}",
+                  "${data['remainingAmount']}",
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 44,
@@ -90,7 +90,7 @@ class Cards extends StatelessWidget {
                         heading: 'Credit',
                         amount: '${data['totalCredit']}',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       CardOne(
@@ -140,7 +140,7 @@ class CardOne extends StatelessWidget {
                     style: TextStyle(color: color, fontSize: 14),
                   ),
                   Text(
-                    "${amount}",
+                    amount,
                     style: TextStyle(
                         color: color,
                         fontSize: 30,

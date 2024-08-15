@@ -1,7 +1,9 @@
 import 'package:budget/utils/appValodator.dart';
 import 'package:budget/widgets/category-dropdown.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class AddTransactionForm extends StatefulWidget {
@@ -20,7 +22,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   var appValidator = AppValidator();
   var amountEditController = TextEditingController();
   var titleEditController = TextEditingController();
-  var uid = Uuid();
+  var uid = const Uuid();
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -28,12 +30,59 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
         isLoader = true;
       });
       final user = FirebaseAuth.instance.currentUser;
-      int timeStamp = DateTime.now().microsecondsSinceEpoch;
-      // var data = {
-      //   "email": _emailController.text,
-      //   "password": _passwordController.text,
-      // };
+      int timeStamp = DateTime.now().millisecondsSinceEpoch;
+      var amount = int.parse(amountEditController.text);
+      DateTime date = DateTime.now();
 
+      var id = uid.v4();
+      String monthyear = DateFormat('MMM y').format(date);
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+
+      int remainingAmount = userDoc['remainingAmount'];
+      int totalCredit = userDoc['totalCredit'];
+      int totalDebit = userDoc['totalDebit'];
+
+      if (type == 'credit') {
+        remainingAmount += amount;
+        totalCredit += amount;
+      } else {
+        remainingAmount -= amount;
+        totalDebit += amount;
+      }
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .update({
+        'remainingAmount': remainingAmount,
+        'totalCredit': totalCredit,
+        'totalDebit': totalDebit,
+        'updatedAt': timeStamp,
+      });
+      var data = {
+        "id": id,
+        "title": titleEditController.text,
+        "amount": amount,
+        "timeStamp": timeStamp,
+        "totalCredit": totalCredit,
+        "totalDebit": totalDebit,
+        "remainingAmount": remainingAmount,
+        "monthyear": monthyear,
+        "category": category,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .collection('transactions')
+          .doc(id)
+          .set(data);
+
+      Navigator.pop(context);
       //await authService.login(data, context);
       setState(() {
         isLoader = false;
@@ -102,7 +151,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
                   }
                 },
                 child: isLoader
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : const Text('Add Transaction'))
           ],
         ),

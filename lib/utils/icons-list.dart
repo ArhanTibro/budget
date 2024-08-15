@@ -40,6 +40,10 @@ class AppIcons {
       "icon":
           FontAwesomeIcons.cartPlus, // or any icon that you find appropriate
     },
+    {
+      "name": "Transportation",
+      "icon": FontAwesomeIcons.car,
+    }
   ];
   IconData getExpenseCategortIcons(String categoryName) {
     final category = homeExpensesCategories.firstWhere(
