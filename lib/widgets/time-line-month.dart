@@ -3,15 +3,17 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class TimeLineMonth extends StatefulWidget {
-  const TimeLineMonth({super.key});
+  const TimeLineMonth({super.key, required this.onChanged});
+  final ValueChanged<String?> onChanged;
 
   @override
   State<TimeLineMonth> createState() => _TimeLineMonthState();
 }
 
 class _TimeLineMonthState extends State<TimeLineMonth> {
-  String currentMont = "";
+  String currentMonth = "";
   List<String> months = [];
+  final scrollController = ScrollController();
 
   @override
   void initState() {
@@ -21,7 +23,19 @@ class _TimeLineMonthState extends State<TimeLineMonth> {
       months.add(
           DateFormat('MMM y').format(DateTime(now.year, now.month + i, 1)));
     }
-    currentMont = DateFormat('MMM y').format(now);
+    currentMonth = DateFormat('MMM y').format(now);
+    Future.delayed(Duration(seconds: 1), () {
+      scrollToSelectedMonth();
+    });
+  }
+
+  scrollToSelectedMonth() {
+    final selectedMonthIndex = months.indexOf(currentMonth);
+    if (selectedMonthIndex != -1) {
+      final scrollOffset = (selectedMonthIndex * 100.0) - 170;
+      scrollController.animateTo(scrollOffset,
+          duration: Duration(microseconds: 500), curve: Curves.ease);
+    }
   }
 
   @override
@@ -29,24 +43,34 @@ class _TimeLineMonthState extends State<TimeLineMonth> {
     return Container(
       height: 40,
       child: ListView.builder(
+          controller: scrollController,
           itemCount: months.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
                 setState(() {
-                  currentMont = months[index];
+                  currentMonth = months[index];
+                  widget.onChanged(months[index]);
                 });
+                scrollToSelectedMonth();
               },
               child: Container(
                 margin: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: currentMont == months[index]
+                    color: currentMonth == months[index]
                         ? Colors.blue.shade900
                         : Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20)),
                 width: 80,
-                child: Center(child: Text(months[index])),
+                child: Center(
+                    child: Text(
+                  months[index],
+                  style: TextStyle(
+                      color: currentMonth == months[index]
+                          ? Colors.white
+                          : Colors.purple),
+                )),
               ),
             );
           }),

@@ -1,4 +1,7 @@
+import 'package:budget/widgets/category-list.dart';
+import 'package:budget/widgets/tab-bar-view.dart';
 import 'package:budget/widgets/time-line-month.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Transactionscreen extends StatelessWidget {
@@ -10,9 +13,15 @@ class Transactionscreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Expansive'),
       ),
-      body: const Column(
+      body: Column(
         children: [
-          TimeLineMonth(),
+          TimeLineMonth(
+            onChanged: (String? value) {},
+          ),
+          CategoryList(onChanged: (String? value) {
+            if (value != null) {}
+          }),
+          TypeTabBar(),
         ],
       ),
     );
